@@ -7,32 +7,34 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 @Configuration
 public class FirebaseAdminConfig {
 
-    @Value("${app.firebaseServiceAccountJson}")
-    private String firebaseServiceAccountJson;
+    // ✅ chemin vers le fichier secret (fourni par Koyeb)
+    @Value("${app.firebaseServiceAccountPath:/app/firebase-service-account.json}")
+    private String firebaseServiceAccountPath;
 
     @PostConstruct
     public void initFirebase() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
 
-                ByteArrayInputStream serviceAccount =
-                        new ByteArrayInputStream(firebaseServiceAccountJson.getBytes(StandardCharsets.UTF_8));
+                InputStream serviceAccount = new FileInputStream(firebaseServiceAccountPath);
 
                 FirebaseOptions options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                         .build();
 
                 FirebaseApp.initializeApp(options);
+
                 System.out.println("✅ Firebase Admin initialisé correctement !");
             }
         } catch (Exception e) {
             System.out.println("❌ Erreur Firebase init : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

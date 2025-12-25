@@ -13,34 +13,26 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 public class FirebaseAdminConfig {
 
-    // ✅ On récupère le JSON depuis variable d'environnement
     @Value("${app.firebaseServiceAccountJson}")
-    private String firebaseJson;
+    private String firebaseServiceAccountJson;
 
     @PostConstruct
     public void initFirebase() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
 
-                if (firebaseJson == null || firebaseJson.isBlank()) {
-                    System.out.println("❌ FIREBASE_SERVICE_ACCOUNT vide !");
-                    return;
-                }
-
                 ByteArrayInputStream serviceAccount =
-                        new ByteArrayInputStream(firebaseJson.getBytes(StandardCharsets.UTF_8));
+                        new ByteArrayInputStream(firebaseServiceAccountJson.getBytes(StandardCharsets.UTF_8));
 
                 FirebaseOptions options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                         .build();
 
                 FirebaseApp.initializeApp(options);
-
-                System.out.println("✅ Firebase Admin initialisé correctement (via Secret) !");
+                System.out.println("✅ Firebase Admin initialisé correctement !");
             }
         } catch (Exception e) {
             System.out.println("❌ Erreur Firebase init : " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }

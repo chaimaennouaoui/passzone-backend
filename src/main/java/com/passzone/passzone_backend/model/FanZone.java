@@ -1,0 +1,35 @@
+package com.passzone.passzone_backend.model;
+
+import jakarta.persistence.*;
+
+@Entity
+public class FanZone {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String city;
+    private int capacity;
+
+    @Column(length = 2000)
+    private String rules;
+
+    public FanZone() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+
+    public int getCapacity() { return capacity; }
+    public void setCapacity(int capacity) { this.capacity = capacity; }
+
+    public String getRules() { return rules; }
+    public void setRules(String rules) { this.rules = rules; }
+}

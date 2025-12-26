@@ -15,7 +15,13 @@ public class CorsConfig {
   public CorsConfigurationSource corsConfigurationSource() {
 
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+
+    config.setAllowedOrigins(List.of(
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://kaleidoscopic-syrniki-85e8e1.netlify.app"
+    ));
+
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);

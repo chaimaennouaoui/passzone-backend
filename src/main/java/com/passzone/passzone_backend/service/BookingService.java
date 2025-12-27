@@ -27,20 +27,20 @@ public class BookingService {
     private final ReservationRepo reservationRepo;
     private final TicketRepo ticketRepo;
     private final QrService qrService;
-    private final EmailService emailService;
+    private final EmailJsService emailJsService;
     private final AppProperties props;
 
     public BookingService(TimeSlotRepo slotRepo,
                           ReservationRepo reservationRepo,
                           TicketRepo ticketRepo,
                           QrService qrService,
-                          EmailService emailService,
+                          EmailJsService emailJsService,
                           AppProperties props) {
         this.slotRepo = slotRepo;
         this.reservationRepo = reservationRepo;
         this.ticketRepo = ticketRepo;
         this.qrService = qrService;
-        this.emailService = emailService;
+        this.emailJsService = emailJsService;
         this.props = props;
     }
 
@@ -85,9 +85,19 @@ public class BookingService {
 
         ticketRepo.save(ticket);
 
-        // demo email console
+        // ✅ SEND EMAIL VIA EmailJS
         if (user.email() != null) {
-            emailService.sendBookingEmail(user.email(), ticketCode);
+            try {
+                emailJsService.sendReservationEmail(
+                        user.email(),
+                        ticketCode,
+                        slot.getFanZone().getName(),
+                        slot.getMatchName(),
+                        slot.getStartTime().toString()
+                );
+            } catch (Exception e) {
+                System.out.println("❌ Email send failed: " + e.getMessage());
+            }
         }
 
         TicketResponse resp = new TicketResponse();
